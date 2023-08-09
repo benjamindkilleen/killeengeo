@@ -2,10 +2,14 @@
 
 from setuptools import find_packages, setup
 
+with open("README.md", "r") as f:
+    long_description = f.read()
+
 setup(
     name="killeengeo",
     version="0.0.1",
     description="2D and 3D geometry in Python.",
+    long_description=long_description,
     author="Benjamin D. Killeen",
     author_email="killeen@jhu.edu",
     url="https://killeengeo.readthedocs.io/en/latest/",
