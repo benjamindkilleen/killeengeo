@@ -9,6 +9,7 @@ setup(
     author="Benjamin D. Killeen",
     author_email="killeen@jhu.edu",
     url="https://killeengeo.readthedocs.io/en/latest/",
+    python_requires=">=3.10",
     install_requires=[
         "numpy",
         "scipy",
