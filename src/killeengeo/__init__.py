@@ -95,3 +95,5 @@ __all__ = [
     "Rotation",
     "spherical_uniform",
 ]
+
+__version__ = "0.0.2"
