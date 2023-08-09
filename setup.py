@@ -10,6 +10,7 @@ setup(
     version="0.0.1",
     description="2D and 3D geometry in Python.",
     long_description=long_description,
+    long_description_content_type="text/markdown",
     author="Benjamin D. Killeen",
     author_email="killeen@jhu.edu",
     url="https://killeengeo.readthedocs.io/en/latest/",
