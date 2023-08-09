@@ -1,0 +1,18 @@
+#!/usr/bin/env python
+
+from setuptools import find_packages, setup
+
+setup(
+    name="killeengeo",
+    version="0.0.1",
+    description="2D and 3D geometry in Python.",
+    author="Benjamin D. Killeen",
+    author_email="killeen@jhu.edu",
+    url="https://killeengeo.readthedocs.io/en/latest/",
+    install_requires=[
+        "numpy",
+        "scipy",
+    ],
+    packages=find_packages(),
+    package_dir={"": "src"},
+)

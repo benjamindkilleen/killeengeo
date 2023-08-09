@@ -1,0 +1,11 @@
+numpy
+scipy
+
+# development
+pytest
+pytest-cov
+pre-commit
+black
+flake8
+mkdocs
+mkdocstrings[python]
