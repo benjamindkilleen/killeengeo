@@ -1880,7 +1880,9 @@ def frame_transform(*args) -> FrameTransform:
         raise TypeError(f"too many arguments: {args}")
 
 
-f = frame_transform
+# Make f an alias of frame_transform preserving typing and docstring
+def f(*args, **kwargs):
+    return frame_transform(*args, **kwargs)
 
 RAS_from_LPS = FrameTransform(
     np.array([[-1, 0, 0, 0], [0, -1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]])

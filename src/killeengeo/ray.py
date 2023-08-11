@@ -139,7 +139,11 @@ class Ray3D(Ray, Joinable, HasProjection):
     def meet(self, other: Plane) -> Point3D:
         # TODO: depending on direction, ray may not intersect plane. Sort of the whole point.
         l = self.p.join(self.p + self.n)
-        return l.meet(other)
+        x = l.meet(other)
+        # Check which direction x is on the ray.
+        if self.n.dot(x - self.p) < 0:
+            raise MeetError("ray does not intersect plane")
+        return x
 
     def __iter__(self) -> Iterator[Union[Point3D, Vector3D]]:
         yield self.p
