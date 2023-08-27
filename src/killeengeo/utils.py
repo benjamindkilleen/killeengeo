@@ -1,4 +1,4 @@
-from typing import List, Union
+from typing import List, Union, TypeVar, Tuple, overload, Dict
 import numpy as np
 import logging
 import traceback
@@ -48,3 +48,75 @@ def _from_homogeneous(x: np.ndarray, is_point: bool = True) -> np.ndarray:
     else:
         assert np.all(np.isclose(x[..., -1], 0)), f"not a homogeneous vector: {x}"
         return x[..., :-1]
+
+
+T = TypeVar("T")
+S = TypeVar("S")
+
+
+def tuplify(t: Union[Tuple[T, ...], T], n: int = 1) -> Tuple[T, ...]:
+    """Create a tuple with `n` copies of `t`,  if `t` is not already a tuple of length `n`."""
+    if isinstance(t, (tuple, list)):
+        assert len(t) == n
+        return tuple(t)
+    else:
+        return tuple(t for _ in range(n))
+
+
+def listify(x: Union[List[T], T], n: int = 1) -> List[T]:
+    if isinstance(x, list):
+        return x
+    else:
+        return [x] * n
+
+
+@overload
+def radians(t: float, degrees: bool) -> float:
+    ...
+
+
+@overload
+def radians(t: np.ndarray, degrees: bool) -> np.ndarray:
+    ...
+
+
+@overload
+def radians(ts: List[T], degrees: bool) -> List[T]:
+    ...
+
+
+@overload
+def radians(ts: Dict[S, T], degrees: bool) -> Dict[S, T]:
+    ...
+
+
+@overload
+def radians(*ts: T, degrees: bool) -> List[T]:
+    ...
+
+
+def radians(*args, degrees=True):
+    """Convert to radians.
+
+    Args:
+        ts: the angle or array of angles.
+        degrees (bool, optional): whether the inputs are in degrees. If False, this is a no-op. Defaults to True.
+
+    Returns:
+        Union[float, List[float]]: each argument, converted to radians.
+    """
+    if len(args) == 1:
+        if isinstance(args[0], (float, int)):
+            return math.radians(args[0]) if degrees else args[0]
+        elif isinstance(args[0], dict):
+            return {k: radians(v, degrees=degrees) for k, v in args[0].items()}
+        elif isinstance(args[0], (list, tuple)):
+            return [radians(t, degrees=degrees) for t in args[0]]
+        elif isinstance(args[0], np.ndarray):
+            return np.radians(args[0]) if degrees else args[0]
+        else:
+            raise TypeError(f"Cannot convert {type(args[0])} to radians.")
+    elif isinstance(args[-1], bool):
+        return radians(*args[:-1], degrees=args[-1])
+    else:
+        return [radians(t, degrees=degrees) for t in args]

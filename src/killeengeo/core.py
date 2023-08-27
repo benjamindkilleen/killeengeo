@@ -34,9 +34,8 @@ from copy import deepcopy
 import math
 import math
 
-from .utils import _array, _to_homogeneous, _from_homogeneous
+from .utils import _array, _to_homogeneous, _from_homogeneous, tuplify
 from .exceptions import MeetError, JoinError
-from .. import utils
 
 if TYPE_CHECKING:
     from .typing import P, V, R, S, L, Pl, PV, Pr
@@ -1884,6 +1883,7 @@ def frame_transform(*args) -> FrameTransform:
 def f(*args, **kwargs):
     return frame_transform(*args, **kwargs)
 
+
 RAS_from_LPS = FrameTransform(
     np.array([[-1, 0, 0, 0], [0, -1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]])
 )
@@ -1976,7 +1976,7 @@ class CameraIntrinsicTransform(FrameTransform):
         cx, cy = np.array(optical_center)
 
         if aspect_ratio is None:
-            fx, fy = utils.tuplify(focal_length, 2)
+            fx, fy = tuplify(focal_length, 2)
         else:
             assert isinstance(
                 focal_length, (float, int)
@@ -2007,8 +2007,8 @@ class CameraIntrinsicTransform(FrameTransform):
         Returns:
 
         """
-        sensor_size = utils.tuplify(sensor_size, 2)
-        pixel_size = utils.tuplify(pixel_size, 2)
+        sensor_size = tuplify(sensor_size, 2)
+        pixel_size = tuplify(pixel_size, 2)
         fx = source_to_detector_distance / pixel_size[0]
         fy = source_to_detector_distance / pixel_size[1]
         optical_center = point(sensor_size[0] / 2, sensor_size[1] / 2)
