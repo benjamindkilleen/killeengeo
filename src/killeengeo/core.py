@@ -27,6 +27,7 @@ import logging
 from abc import ABC, abstractmethod
 from typing_extensions import Self
 import numpy as np
+import scipy
 import scipy.spatial.distance
 from scipy.spatial import cKDTree
 from scipy.spatial.transform import Rotation
@@ -2163,6 +2164,48 @@ class CameraProjection(Transform):
         K: Union[CameraIntrinsicTransform, np.ndarray],
     ):
         return cls(intrinsic=K, extrinsic=FrameTransform.from_rt(R, t))
+
+    @classmethod
+    def from_matrix(
+        cls,
+        projection_matrix: np.ndarray,
+        pixel_size: float,
+        sensor_height: Optional[int] = None,
+        sensor_width: Optional[int] = None,
+    ):
+        """Decompose the projection matrix.
+
+        Based on https://ksimek.github.io/2012/08/14/decompose/.
+
+        Args:
+            projection_matrix (np.ndarray): 4x4 projection matrix.
+            pixel_size: the pixel size in world units (mm). Assumes square pixels.
+
+        Returns:
+            CameraProjection: the camera projection.
+        """
+        P = projection_matrix[[0, 1, 3], :]  # Remove the Z row
+        M = P[:, 0:3]
+        K, R = scipy.linalg.rq(M)
+        T = np.diag(np.sign(np.diag(K)))
+        if np.linalg.det(T) < 0:
+            T[1, 1] *= -1
+        K = K @ T
+        R = T @ R
+
+        if np.linalg.det(R) < 0:
+            R *= -1
+
+        t = np.linalg.inv(K) @ P[:, 3]
+        pixel_from_world_units = F.from_scaling(1 / pixel_size, dim=2)
+        K = pixel_from_world_units.data @ K
+        K /= K[2, 2]
+
+        intrinsic = CameraIntrinsicTransform(
+            K, sensor_height=sensor_height, sensor_width=sensor_width
+        )
+        camera_from_world = FrameTransform.from_rt(R, t)
+        return cls(intrinsic, camera_from_world)
 
     @property
     def K(self):
