@@ -2271,6 +2271,11 @@ class CameraProjection(Transform):
         """Get the principle ray in world coordinates."""
         return self.world_from_camera3d @ vector(0, 0, 1)
 
+    @property
+    def principle_ray(self) -> Vector3D:
+        """Get the principle ray in world coordinates."""
+        return self.world_from_camera3d @ vector(0, 0, 1)
+
     def get_center_in_world(self) -> Point3D:
         """Get the center of the camera (origin of camera3d frame) in world coordinates.
 
