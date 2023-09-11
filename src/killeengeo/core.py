@@ -1811,7 +1811,7 @@ def frame_transform(*args) -> FrameTransform:
             return FrameTransform.from_translation(a)
         elif isinstance(a, Rotation):
             return FrameTransform.from_rotation(a)
-        elif isinstance(a, FrameTransform):
+        elif isinstance(a, (FrameTransform)):
             return a
         elif isinstance(a, (int, float)):
             return FrameTransform.from_scaling(a)
@@ -1850,6 +1850,8 @@ def frame_transform(*args) -> FrameTransform:
             return frame_transform(a["R"], a["t"])
         elif isinstance(a, dict):
             raise TypeError(f"couldn't convert dict to FrameTransform: {a}")
+        elif hasattr(a, "__array__"):
+            return frame_transform(np.array(a))
         else:
             raise TypeError(f"couldn't convert to FrameTransform: {a}")
     elif len(args) == 2:
