@@ -248,7 +248,6 @@ class Line(HasLocationAndDirection, Meetable):
             Line: The line through the point in the direction of the vector.
 
         """
-        log.debug(f"constructing line from point {p} and direction {v}")
         p = point(p)
         v = vector(v)
         return p.join(p + v)
