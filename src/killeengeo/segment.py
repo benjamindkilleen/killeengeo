@@ -96,7 +96,7 @@ class Segment(HasLocationAndDirection, Meetable):
         return cls.from_point_direction(p, n)
 
     @property
-    def p(self) -> Point:
+    def p(self):
         """Get the first point of the segment.
 
         Returns:
@@ -106,7 +106,7 @@ class Segment(HasLocationAndDirection, Meetable):
         return point(self.data[: self.dim, 0])
 
     @p.setter
-    def p(self, value: Point2D) -> None:
+    def p(self, value) -> None:
         """Set the first point of the segment.
 
         Args:

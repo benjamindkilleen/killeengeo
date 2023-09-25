@@ -146,7 +146,7 @@ class HyperPlane(HasLocationAndDirection, Meetable):
         return abs(self.signed_distance(p))
 
     def project(self, p: P) -> P:
-        """Get the closest point on the hyperplane to p.
+        """Get the closest point on `self` to `p`.
 
         Args:
             p (Point): The point to project.
@@ -541,6 +541,26 @@ class Line3D(Line, Primitive, Joinable, Meetable, HasProjection):
         d = self.get_direction()
         return d.as_plane().meet(self)
 
+    def closest_to(self, other: Line3D) -> Point3D:
+        """Get the closest point on this line to the other line.
+
+        Args:
+            other (Line3D): The line to project.
+
+        Returns:
+            Point3D: The closest point on the line to the other line.
+
+        """
+        p1 = np.array(self.get_point())
+        p2 = np.array(other.get_point())
+        v1 = np.array(self.get_direction())
+        v2 = np.array(other.get_direction())
+
+        t = (
+            np.dot(v1, v2) * np.dot(v2, p1 - p2) - np.dot(v1, p1 - p2) * np.dot(v2, v2)
+        ) / (1 - np.dot(v1, v2) ** 2)
+        return point(p1 + t * v1)
+
 
 @overload
 def line(l: Line2D) -> Line2D:
@@ -604,6 +624,11 @@ def line(a: Plane, b: Plane) -> Line3D:
 
 @overload
 def line(x: Point2D, v: Vector2D) -> Line2D:
+    ...
+
+
+@overload
+def line(x: Point3D, v: Vector3D) -> Line3D:
     ...
 
 
