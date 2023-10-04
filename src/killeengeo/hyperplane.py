@@ -560,6 +560,22 @@ class Line3D(Line, Primitive, Joinable, Meetable, HasProjection):
         ) / (1 - np.dot(v1, v2) ** 2)
         return point(p1 + t * v1)
 
+    def triangulate_point(self, other: Line3D) -> Point3D:
+        """Get the midpoint between this line and another.
+
+        This is useful for triangulation.
+
+        Args:
+            other (Line3D): The other line.
+
+        Returns:
+            Point3D: The midpoint between the closest point on each line to the other.
+
+        """
+        p1 = self.closest_to(other)
+        p2 = other.closest_to(self)
+        return p1.lerp(p2, 0.5)
+
 
 @overload
 def line(l: Line2D) -> Line2D:
