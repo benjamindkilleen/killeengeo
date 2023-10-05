@@ -652,6 +652,14 @@ class Point2D(Point):
         v = index_from_world.inv @ self
         return s.join(s + v)
 
+    def cv2(self) -> tuple[int, int]:
+        """Get the point in OpenCV format."""
+        return int(self.x), int(self.y)
+
+    def ij(self) -> tuple[int, int]:
+        """Get the point in numpy format."""
+        return int(self.y), int(self.x)
+
 
 class Vector2D(Vector):
     """Homogeneous vector in 2D, represented as an array with [x, y, 0]"""
