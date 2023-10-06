@@ -19,6 +19,7 @@ from .core import (
     vector,
     HasLocationAndDirection,
     HasProjection,
+    CameraProjection,
 )
 
 
@@ -78,6 +79,9 @@ class Ray(HasLocationAndDirection, Meetable):
             q (Point3D): A point on the ray.
         """
         return cls.from_pn(p, q - p)
+
+    def flatten(self) -> np.ndarray:
+        return self.data[: self.dim, :].T.flatten()
 
     @property
     def p(self) -> Point3D:
@@ -181,6 +185,11 @@ def ray(p: Point3D, q: Point3D) -> Ray3D:
 
 
 @overload
+def ray(proj: CameraProjection) -> Ray3D:
+    ...
+
+
+@overload
 def ray(a: float, b: float, c: float, d: float) -> Ray2D:
     ...
 
@@ -196,11 +205,43 @@ def ray(x: np.ndarray) -> Ray:
 
 
 def ray(*args):
-    """More flexible method for creating a ray."""
-    if len(args) == 1 and isinstance(args[0], Ray):
-        return args[0]
-    elif len(args) == 1 and isinstance(args[0], HasLocationAndDirection):
-        return Ray2D.from_pn(args[0].get_point(), args[0].get_direction())
+    """More flexible method for creating a ray.
+
+    Args:
+        - Ray: Return the ray.
+        - Line: Return a ray along the line, in 2D or 3D.
+        - Point, Vector: Return a ray from the point along the vector.
+        - Point, Point: Return a ray from the first point to the second point.
+        - CameraProjection: Return the principle ray of the camera projection, with the source as the point.
+
+
+    """
+    if len(args) == 1:
+        if isinstance(args[0], Ray):
+            return args[0]
+        elif isinstance(args[0], HasLocationAndDirection):
+            return Ray2D.from_pn(args[0].get_point(), args[0].get_direction())
+        elif isinstance(args[0], CameraProjection):
+            return Ray3D.from_pn(
+                args[0].center_in_world, args[0].principle_ray_in_world.hat()
+            )
+        else:
+            r = _array(args)
+            if r.shape == (4,):
+                return Ray2D.from_pn(r[:2], r[2:])
+            elif r.shape == (6,):
+                return Ray3D.from_pn(r[:3], r[3:])
+            elif r.shape == (2, 2):
+                return Ray3D.from_pn(r[0], r[1])
+            elif r.shape == (2, 3):
+                return Ray3D.from_pn(r[0], r[1])
+            elif r.shape == (2, 2):
+                return Ray2D.from_pn(r[:, 0], r[:, 1])
+            elif r.shape == (3, 2):
+                return Ray3D.from_pn(r[:, 0], r[:, 1])
+            else:
+                raise ValueError(f"invalid data for ray: {r}")
+
     elif len(args) == 2:
         if isinstance(args[0], Point2D) and isinstance(args[1], Vector2D):
             return Ray2D.from_pn(args[0], args[1])
@@ -210,19 +251,3 @@ def ray(*args):
             return Ray2D.from_pq(args[0], args[1])
         elif isinstance(args[0], Point3D) and isinstance(args[1], Point3D):
             return Ray3D.from_pq(args[0], args[1])
-
-    r = _array(args)
-    if r.shape == (4,):
-        return Ray2D.from_pn(r[:2], r[2:])
-    elif r.shape == (6,):
-        return Ray3D.from_pn(r[:3], r[3:])
-    elif r.shape == (2, 2):
-        return Ray3D.from_pn(r[0], r[1])
-    elif r.shape == (2, 3):
-        return Ray3D.from_pn(r[0], r[1])
-    elif r.shape == (2, 2):
-        return Ray2D.from_pn(r[:, 0], r[:, 1])
-    elif r.shape == (3, 2):
-        return Ray3D.from_pn(r[:, 0], r[:, 1])
-    else:
-        raise ValueError(f"invalid data for ray: {r}")
