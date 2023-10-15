@@ -1950,6 +1950,14 @@ class CameraIntrinsicTransform(FrameTransform):
         }
 
     @classmethod
+    def from_config(cls, config):
+        return cls(
+            np.array(config["data"]),
+            sensor_height=config["sensor_height"],
+            sensor_width=config["sensor_width"],
+        )
+
+    @classmethod
     def from_parameters(
         cls,
         optical_center: Point2D,
@@ -2142,9 +2150,24 @@ class CameraProjection(Transform):
             dict[str, Any]: the configuration of the camera projection.
         """
         return {
-            "intrinsic": self.index_from_camera2d,
+            "intrinsic": self.index_from_camera2d.get_config(),
             "extrinsic": self.camera3d_from_world,
         }
+
+    @classmethod
+    def from_config(cls, config: dict[str, Any]) -> "CameraProjection":
+        """Create a camera projection from a configuration.
+
+        Args:
+            config (dict[str, Any]): the configuration.
+
+        Returns:
+            CameraProjection: the camera projection.
+        """
+        return cls(
+            intrinsic=CameraIntrinsicTransform.from_config(config["intrinsic"]),
+            extrinsic=config["extrinsic"],
+        )
 
     @property
     def index_from_world(self) -> Transform:
