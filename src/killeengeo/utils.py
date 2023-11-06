@@ -6,15 +6,24 @@ import traceback
 log = logging.getLogger(__name__)
 
 
-def _array(x: Union[List[np.ndarray], List[float]]) -> np.ndarray:
+def _array(args: Union[list[np.ndarray], list[float], list[str]]) -> np.ndarray:
     # TODO: this is a little sketchy
-    if len(x) == 1:
-        return np.array(x[0])
+    if len(args) == 1 and isinstance(args[0], str):
+        parts = args[0].split()
+        if len(parts) in [2, 3]:
+            return np.array([float(p) for p in parts])
+        elif len(parts) == 14:
+            # Happens when copy-pasting points from Slicer annotation window.
+            return np.array([float(p) for p in parts[1:4]])
+        else:
+            raise ValueError(f"Cannot convert string to array: {args[0]}")
+    elif len(args) == 1:
+        return np.array(args[0])
     else:
-        if isinstance(x[0], np.ndarray):
-            log.warning(f"got unusual args for array: {x}")
+        if isinstance(args[0], np.ndarray):
+            log.warning(f"got unusual args for array: {args}")
             traceback.print_stack()
-        return np.array(x)
+        return np.array(args)
 
 
 def _to_homogeneous(x: np.ndarray, is_point: bool = True) -> np.ndarray:
