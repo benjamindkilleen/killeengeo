@@ -19,6 +19,6 @@ setup(
         "numpy",
         "scipy",
     ],
-    packages=find_packages(),
+    packages=find_packages(where="src"),
     package_dir={"": "src"},
 )
