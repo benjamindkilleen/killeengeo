@@ -1,5 +1,6 @@
 numpy
 scipy
+typing_extensions
 
 # development
 pytest

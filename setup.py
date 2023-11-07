@@ -7,7 +7,7 @@ with open("README.md", "r") as f:
 
 setup(
     name="killeengeo",
-    version="0.0.4",
+    version="0.0.5",
     description="2D and 3D geometry in Python.",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -18,6 +18,7 @@ setup(
     install_requires=[
         "numpy",
         "scipy",
+        "typing_extensions",
     ],
     packages=find_packages(where="src"),
     package_dir={"": "src"},
