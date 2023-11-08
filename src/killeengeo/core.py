@@ -1649,6 +1649,7 @@ FixedParameters: 0 0 0
             else vector(axis)
         )
 
+        direction = vector(direction).hat()
         rotvec = ax.cross(direction).hat()
         rotvec = rotvec * ax.angle(direction)
         rot = Rotation.from_rotvec(np.array(rotvec))
