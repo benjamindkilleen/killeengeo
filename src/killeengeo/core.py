@@ -705,9 +705,9 @@ class Point3D(Point):
         ...
 
     def join(self, other):
-        if isinstance(other, Point3D):
-            from .hyperplane import Line3D
+        from .hyperplane import Line3D
 
+        if isinstance(other, Point3D):
             # Line joining two points in P^3.
             ax, ay, az, aw = self.data
             bx, by, bz, bw = other.data

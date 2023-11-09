@@ -708,6 +708,11 @@ def plane(a: float, b: float, c: float, d: float) -> Plane:
 
 
 @overload
+def plane(p: Point3D, q: Point3D, r: Point3D) -> Plane:
+    ...
+
+
+@overload
 def plane(x: np.ndarray) -> Plane:
     ...
 
@@ -725,6 +730,7 @@ def plane(*args):
     - Pass a numpy array with the homogeneous coordinates.
     - Pass a Plane instance, in which case `plane()` is a no-op.
     - Pass a Point3D and Vector3D instance, in which case `plane(p, n)` returns the plane corresponding to
+    - Pass three points
     - Pass a ray, which defines r, n as above.
     """
     if len(args) == 1 and isinstance(args[0], Plane):
@@ -739,6 +745,8 @@ def plane(*args):
         r: Point3D = args[0]
         n: Vector3D = args[1]
         return Plane.from_point_normal(r, n)
+    elif len(args) == 3 and isinstance(args[0], Point3D):
+        return Plane.from_points(*args)
 
     p = _array(args)
     if p.shape == (4,):
