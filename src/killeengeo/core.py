@@ -1724,6 +1724,18 @@ FixedParameters: 0 0 0
         """
         return (self.R @ points.T).T + self.t
 
+    def transform_vectors(self, vectors: np.ndarray) -> np.ndarray:
+        """Transform a set of vectors.
+
+        Args:
+            vectors (np.ndarray): [N, D] array of nonhomogeneous vectors.
+
+        Returns:
+            np.ndarray: The transformed vectors.
+
+        """
+        return (self.R @ vectors.T).T
+
     def toarray(self):
         """Return the transform as a 3x4 numpy array.
 
