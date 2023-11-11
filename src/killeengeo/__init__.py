@@ -41,6 +41,7 @@ from .segment import Segment, Segment2D, Segment3D, segment
 from .exceptions import JoinError, MeetError
 from scipy.spatial.transform import Rotation
 from .random import spherical_uniform
+from . import utils
 
 __all__ = [
     "HomogeneousObject",
