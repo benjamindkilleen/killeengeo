@@ -251,3 +251,5 @@ def ray(*args):
             return Ray2D.from_pq(args[0], args[1])
         elif isinstance(args[0], Point3D) and isinstance(args[1], Point3D):
             return Ray3D.from_pq(args[0], args[1])
+
+    raise ValueError(f"invalid arguments for ray: {args}")
