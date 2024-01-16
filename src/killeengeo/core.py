@@ -1705,6 +1705,7 @@ FixedParameters: 0 0 0
         return point(self.t)
 
     def tostring(self):
+        """Return a string representation of the transform."""
         formatter = {"float_kind": lambda x: "%.8f" % x}
         lines = [
             np.array2string(self.data[i], separator=" ", formatter=formatter)[1:-1]
@@ -1769,6 +1770,15 @@ FixedParameters: 0 0 0
             Rotation.from_quat(quatpos[:4]).as_matrix(),
             quatpos[4:],
         )
+
+    def as_itk(self) -> np.ndarray:
+        """Return the transform as a 12-element array in ITK format.
+
+        Returns:
+            np.ndarray: The transform as a 12-element array in ITK format.
+
+        """
+        return np.concatenate([self.R.T.reshape(-1), self.t])
 
     def get_point(self, point: Point) -> Point:
         """Transform a point.
@@ -1846,6 +1856,11 @@ def frame_transform(*args) -> FrameTransform:
                 return FrameTransform.from_array(a)
             elif a.shape == (3,) or a.shape == (1, 3):
                 return FrameTransform.from_rt(translation=a)
+            elif a.shape == (6,):
+                # ITK-style transform for 2D
+                r = a[:4].reshape((2, 2)).T
+                t = a[4:].reshape((2,))
+                return FrameTransform.from_rt(r, t)
             elif a.shape == (12,):
                 # ITK-style transform, column-major order
                 r = a[:9].reshape((3, 3)).T
