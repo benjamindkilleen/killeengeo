@@ -42,6 +42,70 @@ def spherical_uniform(center=vector(0, 0, 1), d_phi=np.pi, n=None):
 
 
 @overload
+def clipped_spherical_uniform(
+    center: Point3D,
+    max_alpha: float,
+    max_beta: float,
+    max_theta: float,
+    n: int,
+) -> List[Vector3D]:
+    ...
+
+
+@overload
+def clipped_spherical_uniform(
+    center: Point3D,
+    max_alpha: float,
+    max_beta: float,
+    max_theta: float,
+    n: None,
+) -> Vector3D:
+    ...
+
+
+def clipped_spherical_uniform(
+    center: Point3D,
+    max_alpha: float,
+    max_beta: float,
+    max_theta: float,
+    n: int | None = None,
+) -> list[Vector3D]:
+    """Sample unit vectors on the surface of the sphere within the surface defined by the two angles radians of `center`.
+
+    Args:
+        center (Point3D): The center of the sphere.
+        n (int): The number of points to sample.
+        max_alpha (float): Upper bound for angulation in the left/right direction in radians.
+        max_beta (float): Upper bound for angulation in the cranial/caudal direction in radians.
+        max_theta (float): Upper bound for angulation in the yaw, for lateral views.
+
+    """
+
+    _n = 1 if n is None else n
+
+    d_phi = max(max_alpha, max_beta)
+    out = []
+    while len(out) < _n:
+        ds = np.array(spherical_uniform(center, d_phi, _n))
+
+        alphas = np.arctan2(ds[:, 0], ds[:, 2])
+        betas = np.arctan2(ds[:, 1], ds[:, 2])
+        thetas = np.arctan2(ds[:, 1], ds[:, 0])
+
+        # Sample only the points that are within the bounds.
+        mask = np.logical_and(
+            np.abs(alphas) <= max_alpha,
+            np.logical_or(np.abs(betas) <= max_beta, np.abs(thetas) <= max_theta),
+        )
+        out.extend([vector(d) for d in ds[mask]])
+
+    if n is None:
+        return out[0]
+    else:
+        return out[:_n]
+
+
+@overload
 def normal(
     center: Point3D, scale: float, radius: Optional[float], n: int
 ) -> List[Point3D]:

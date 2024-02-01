@@ -731,6 +731,26 @@ class Point3D(Point):
         else:
             raise TypeError(f"unrecognized type for join: {type(other)}")
 
+    def for_slicer(self, name: str | None = None, RAS: bool = True) -> str:
+        """Get a string that can be pasted into Slicer.
+
+
+        E.g.
+        1	-22.466650009155273	113.52101135253906	-583.3788452148438	0	0	0	1	1	1	0	L-1			2	0
+
+        Args:
+            RAS: Whether the point is in RAS coordinates. Slicer wants the LPS coordinates.
+
+        """
+
+        if RAS:
+            x, y, z = -self.x, -self.y, self.z
+
+        else:
+            x, y, z = self
+
+        return f"""1\t{x}\t{y}\t{z}\t0\t0\t0\t1\t1\t1\t0\t{name}\t\t\t2\t0"""
+
 
 class Vector3D(Vector):
     """Homogeneous vector in 3D, represented as an array with [x, y, z, 0].
@@ -1712,6 +1732,10 @@ FixedParameters: 0 0 0
             for i in range(self.data.shape[0])
         ]
         return "\n".join(lines)
+
+    def for_slicer(self) -> str:
+        """Return a string representation of the transform for Slicer."""
+        return self.tostring()
 
     def transform_points(self, points: np.ndarray) -> np.ndarray:
         """Transform a set of points.
