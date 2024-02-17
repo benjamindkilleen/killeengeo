@@ -1161,7 +1161,13 @@ class Transform(HomogeneousObject):
             # bulky.
             return [self @ x for x in other]
         elif isinstance(self, FrameTransform):
-            if isinstance(other, FrameTransform):
+            if isinstance(other, CameraIntrinsicTransform):
+                return CameraIntrinsicTransform(
+                    self.data @ other.data, other._sensor_height, other._sensor_width
+                )
+            elif isinstance(other, CameraProjection):
+                return CameraProjection(self @ other.intrinsic, other.extrinsic.copy())
+            elif isinstance(other, FrameTransform):
                 return FrameTransform(self.data @ other.data)
             elif isinstance(other, HasLocationAndDirection):
                 p = other.get_point()
@@ -1169,12 +1175,6 @@ class Transform(HomogeneousObject):
                 p_ = self @ p
                 v_ = self @ v
                 return type(other).from_point_direction(p_, v_)
-            elif isinstance(other, CameraIntrinsicTransform):
-                return CameraIntrinsicTransform(
-                    self.data @ other.data, other._sensor_height, other._sensor_width
-                )
-            elif isinstance(other, CameraProjection):
-                return CameraProjection(self @ other.intrinsic, other.extrinsic.copy())
             elif isinstance(other, Primitive):
                 # Catches other primitives, which are parameterized by columns of points or vectors.
                 return type(other)(self.data @ other.data)
