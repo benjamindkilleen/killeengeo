@@ -21,13 +21,11 @@ def _sample_spherical(d_phi: float, n: int) -> np.ndarray:
 
 
 @overload
-def spherical_uniform(center: Vector3D, d_phi: float, n: int) -> List[Vector3D]:
-    ...
+def spherical_uniform(center: Vector3D, d_phi: float, n: int) -> List[Vector3D]: ...
 
 
 @overload
-def spherical_uniform(center: Vector3D, d_phi: float, n: None) -> Vector3D:
-    ...
+def spherical_uniform(center: Vector3D, d_phi: float, n: None) -> Vector3D: ...
 
 
 def spherical_uniform(center=vector(0, 0, 1), d_phi=np.pi, n=None):
@@ -48,8 +46,7 @@ def clipped_spherical_uniform(
     max_beta: float,
     max_theta: float,
     n: int,
-) -> List[Vector3D]:
-    ...
+) -> List[Vector3D]: ...
 
 
 @overload
@@ -59,12 +56,11 @@ def clipped_spherical_uniform(
     max_beta: float,
     max_theta: float,
     n: None,
-) -> Vector3D:
-    ...
+) -> Vector3D: ...
 
 
 def clipped_spherical_uniform(
-    center: Point3D,
+    center: Vector3D,
     max_alpha: float,
     max_beta: float,
     max_theta: float,
@@ -74,10 +70,10 @@ def clipped_spherical_uniform(
 
     Args:
         center (Point3D): The center of the sphere.
-        n (int): The number of points to sample.
         max_alpha (float): Upper bound for angulation in the left/right direction in radians.
         max_beta (float): Upper bound for angulation in the cranial/caudal direction in radians.
         max_theta (float): Upper bound for angulation in the yaw, for lateral views.
+        n (int): The number of points to sample.
 
     """
 
@@ -108,13 +104,13 @@ def clipped_spherical_uniform(
 @overload
 def normal(
     center: Point3D, scale: float, radius: Optional[float], n: int
-) -> List[Point3D]:
-    ...
+) -> List[Point3D]: ...
 
 
 @overload
-def normal(center: Point3D, scale: float, radius: Optional[float], n: None) -> Point3D:
-    ...
+def normal(
+    center: Point3D, scale: float, radius: Optional[float], n: None
+) -> Point3D: ...
 
 
 def normal(center=point(0, 0, 0), scale=1, radius=None, n=None):
@@ -148,13 +144,11 @@ def normal(center=point(0, 0, 0), scale=1, radius=None, n=None):
 
 
 @overload
-def uniform(center: Point3D, radius: float, n: int) -> List[Point3D]:
-    ...
+def uniform(center: Point3D, radius: float, n: int) -> List[Point3D]: ...
 
 
 @overload
-def uniform(center: Point3D, radius: float, n: None) -> Point3D:
-    ...
+def uniform(center: Point3D, radius: float, n: None) -> Point3D: ...
 
 
 def uniform(center=point(0, 0, 0), radius=1, n=None):
