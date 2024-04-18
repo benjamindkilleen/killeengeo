@@ -1046,6 +1046,9 @@ class Transform(HomogeneousObject):
     def __matmul__(self: FrameTransform, other: FrameTransform) -> FrameTransform: ...
 
     @overload
+    def __matmul__(self: FrameTransform, other: Vector3D) -> Vector3D: ...
+
+    @overload
     def __matmul__(self: FrameTransform, other: PV) -> PV: ...
 
     @overload
