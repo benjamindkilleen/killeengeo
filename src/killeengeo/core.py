@@ -271,9 +271,13 @@ class HasDirection(Primitive):
         w = other.get_direction()
 
         v = w.cross(u)
-        if np.isclose(v.norm(), 0):
-            # TODO: edge case when parallel but in opposite directions?
+        parallel = np.isclose(v.norm(), 0)
+        same_direction = np.isclose(u.dot(w), 1)
+        if parallel and same_direction:
             return FrameTransform.identity(self.dim)
+        elif parallel:
+            rot = Rotation.from_rotvec(u.perpendicular().hat() * np.pi)
+            return FrameTransform.from_rotation(rot)
         v = v.hat()
         theta = self.angle(other)
         rot = Rotation.from_rotvec(v * theta)
@@ -1040,6 +1044,9 @@ class Transform(HomogeneousObject):
 
     @overload
     def __matmul__(self: FrameTransform, other: FrameTransform) -> FrameTransform: ...
+
+    @overload
+    def __matmul__(self: FrameTransform, other: Vector3D) -> Vector3D: ...
 
     @overload
     def __matmul__(self: FrameTransform, other: PV) -> PV: ...
