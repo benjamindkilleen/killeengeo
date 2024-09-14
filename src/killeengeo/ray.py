@@ -105,6 +105,48 @@ class Ray(HasLocationAndDirection, Meetable):
     def get_point(self) -> Point3D:
         return self.p
 
+    @overload
+    def project(self, other: Point2D) -> Point2D: ...
+    @overload
+    def project(self, other: Point3D) -> Point3D: ...
+    def project(self, other):
+        """Get the closest point on `self` to `p`.
+
+        Args:
+            p (Point): The point to project.
+
+        Returns:
+            Point: The closest point on the hyperplane to p.
+
+        """
+        other = point(other)
+        p = self.p
+        n = self.n
+        d = other - p
+        if d.dot(n) < 0:
+            return other
+
+        return p + n.dot(d) * n
+
+    def distance(self, other: Point) -> float:
+        """Get the distance of the point to the ray.
+
+        Args:
+            other (Point): the point to evaluate at.
+
+        Returns:
+            float: the distance of the point to the hyperplane.
+
+        """
+        other = point(other)
+        p = self.p
+        n = self.n
+        d = other - p
+        if d.dot(n) < 0:
+            return d.norm()
+
+        return (d - n.dot(d) * n).norm()
+
 
 class Ray2D(Ray):
     dim = 2
@@ -155,53 +197,43 @@ class Ray3D(Ray, Joinable, HasProjection):
 
 
 @overload
-def ray(r: R) -> R:
-    ...
+def ray(r: R) -> R: ...
 
 
 @overload
-def ray(l: Line2D) -> Ray2D:
-    ...
+def ray(l: Line2D) -> Ray2D: ...
 
 
 @overload
-def ray(l: Line3D) -> Ray3D:
-    ...
+def ray(l: Line3D) -> Ray3D: ...
 
 
 @overload
-def ray(p: Point2D, n: Vector2D) -> Ray2D:
-    ...
+def ray(p: Point2D, n: Vector2D) -> Ray2D: ...
 
 
 @overload
-def ray(p: Point3D, n: Vector3D) -> Ray3D:
-    ...
+def ray(p: Point3D, n: Vector3D) -> Ray3D: ...
 
 
 @overload
-def ray(p: Point3D, q: Point3D) -> Ray3D:
-    ...
+def ray(p: Point3D, q: Point3D) -> Ray3D: ...
 
 
 @overload
-def ray(proj: CameraProjection) -> Ray3D:
-    ...
+def ray(proj: CameraProjection) -> Ray3D: ...
 
 
 @overload
-def ray(a: float, b: float, c: float, d: float) -> Ray2D:
-    ...
+def ray(a: float, b: float, c: float, d: float) -> Ray2D: ...
 
 
 @overload
-def ray(a: float, b: float, c: float, d: float, e: float, f: float) -> Ray3D:
-    ...
+def ray(a: float, b: float, c: float, d: float, e: float, f: float) -> Ray3D: ...
 
 
 @overload
-def ray(x: np.ndarray) -> Ray:
-    ...
+def ray(x: np.ndarray) -> Ray: ...
 
 
 def ray(*args):

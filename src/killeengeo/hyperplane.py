@@ -118,6 +118,8 @@ class HyperPlane(HasLocationAndDirection, Meetable):
     def n(self) -> Vector3D:
         return self.get_normal()
 
+    # TODO: Make the functions below fundamental aspects of HasLocation, etc.
+
     def signed_distance(self, p: Point) -> float:
         """Get the signed distance from the given point to the hyperplane.
 
@@ -165,12 +167,10 @@ class Line(HasLocationAndDirection, Meetable):
     """Abstract parent class for lines and line-like objects."""
 
     @overload
-    def as_points(self: Line2D) -> Tuple[Point2D, Point2D]:
-        ...
+    def as_points(self: Line2D) -> Tuple[Point2D, Point2D]: ...
 
     @overload
-    def as_points(self: Line3D) -> Tuple[Point3D, Point3D]:
-        ...
+    def as_points(self: Line3D) -> Tuple[Point3D, Point3D]: ...
 
     def as_points(self):
         """Get two points on the line.
@@ -182,12 +182,10 @@ class Line(HasLocationAndDirection, Meetable):
         return self.get_point(), self.get_point() + self.get_direction()
 
     @overload
-    def project(self: Line2D, other: Point2D) -> Point2D:
-        ...
+    def project(self: Line2D, other: Point2D) -> Point2D: ...
 
     @overload
-    def project(self: Line3D, other: Point3D) -> Point3D:
-        ...
+    def project(self: Line3D, other: Point3D) -> Point3D: ...
 
     def project(self, other):
         """Get the closest point on the line to another point.
@@ -265,12 +263,10 @@ class Line2D(Line, HyperPlane):
     dim = 2
 
     @overload
-    def meet(self, other: Line2D) -> Point2D:
-        ...
+    def meet(self, other: Line2D) -> Point2D: ...
 
     @overload
-    def meet(self, other: Segment2D) -> Point2D:
-        ...
+    def meet(self, other: Segment2D) -> Point2D: ...
 
     def meet(self, other):
         if type(other) is Line2D:
@@ -396,12 +392,10 @@ class Plane(HyperPlane):
         return self.get_normal()
 
     @overload
-    def meet(self, other: Plane) -> Line3D:
-        ...
+    def meet(self, other: Plane) -> Line3D: ...
 
     @overload
-    def meet(self, other: Line3D) -> Point3D:
-        ...
+    def meet(self, other: Line3D) -> Point3D: ...
 
     def meet(self, other):
         if isinstance(other, Plane):
@@ -578,78 +572,63 @@ class Line3D(Line, Primitive, Joinable, Meetable, HasProjection):
 
 
 @overload
-def line(l: Line2D) -> Line2D:
-    ...
+def line(l: Line2D) -> Line2D: ...
 
 
 @overload
-def line(l: Line3D) -> Line3D:
-    ...
+def line(l: Line3D) -> Line3D: ...
 
 
 @overload
-def line(r: Ray2D) -> Line2D:
-    ...
+def line(r: Ray2D) -> Line2D: ...
 
 
 @overload
-def line(r: Ray3D) -> Line3D:
-    ...
+def line(r: Ray3D) -> Line3D: ...
 
 
 @overload
-def line(s: Segment2D) -> Line2D:
-    ...
+def line(s: Segment2D) -> Line2D: ...
 
 
 @overload
-def line(s: Segment3D) -> Line3D:
-    ...
+def line(s: Segment3D) -> Line3D: ...
 
 
 @overload
-def line(a: float, b: float, c: float) -> Line2D:
-    ...
+def line(a: float, b: float, c: float) -> Line2D: ...
 
 
 @overload
-def line(l: np.ndarray) -> Line:
-    ...
+def line(l: np.ndarray) -> Line: ...
 
 
 @overload
-def line(p: float, q: float, r: float, s: float, t: float, u: float) -> Line3D:
-    ...
+def line(p: float, q: float, r: float, s: float, t: float, u: float) -> Line3D: ...
 
 
 @overload
-def line(x: Point2D, y: Point2D) -> Line2D:
-    ...
+def line(x: Point2D, y: Point2D) -> Line2D: ...
 
 
 @overload
-def line(x: Point3D, y: Point3D) -> Line3D:
-    ...
+def line(x: Point3D, y: Point3D) -> Line3D: ...
 
 
 @overload
-def line(a: Plane, b: Plane) -> Line3D:
-    ...
+def line(a: Plane, b: Plane) -> Line3D: ...
 
 
 @overload
-def line(x: Point2D, v: Vector2D) -> Line2D:
-    ...
+def line(x: Point2D, v: Vector2D) -> Line2D: ...
 
 
 @overload
-def line(x: Point3D, v: Vector3D) -> Line3D:
-    ...
+def line(x: Point3D, v: Vector3D) -> Line3D: ...
 
 
 @overload
-def line(*args: Any) -> Line:
-    ...
+def line(*args: Any) -> Line: ...
 
 
 def line(*args):
@@ -693,33 +672,27 @@ def line(*args):
 
 
 @overload
-def plane(p: Plane) -> Plane:
-    ...
+def plane(p: Plane) -> Plane: ...
 
 
 @overload
-def plane(r: Ray3D) -> Ray3D:
-    ...
+def plane(r: Ray3D) -> Ray3D: ...
 
 
 @overload
-def plane(a: float, b: float, c: float, d: float) -> Plane:
-    ...
+def plane(a: float, b: float, c: float, d: float) -> Plane: ...
 
 
 @overload
-def plane(p: Point3D, q: Point3D, r: Point3D) -> Plane:
-    ...
+def plane(p: Point3D, q: Point3D, r: Point3D) -> Plane: ...
 
 
 @overload
-def plane(x: np.ndarray) -> Plane:
-    ...
+def plane(x: np.ndarray) -> Plane: ...
 
 
 @overload
-def plane(p: Point3D, n: Vector3D) -> Plane:
-    ...
+def plane(p: Point3D, n: Vector3D) -> Plane: ...
 
 
 def plane(*args):
