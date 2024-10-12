@@ -118,6 +118,8 @@ class HyperPlane(HasLocationAndDirection, Meetable):
     def n(self) -> Vector3D:
         return self.get_normal()
 
+    # TODO: Make the functions below fundamental aspects of HasLocation, etc.
+
     def signed_distance(self, p: Point) -> float:
         """Get the signed distance from the given point to the hyperplane.
 

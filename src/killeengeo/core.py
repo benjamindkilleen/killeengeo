@@ -463,7 +463,7 @@ class Point(PointOrVector, Joinable, HasLocation):
         elif isinstance(other, Point):
             # TODO: should points be allowed to be added together?
             log.warning(
-                f"cannot add two points together: {self} + {other}. This will raise an error in the future."
+                f"cannot really add two points together: {self} + {other}. This will raise an error in the future."
             )
             traceback.print_stack()
             return point(np.array(self) + np.array(other))
