@@ -151,12 +151,10 @@ class Segment(HasLocationAndDirection, Meetable):
         return self.q - self.p
 
     @overload
-    def line(self: Segment2D) -> Line2D:
-        ...
+    def line(self: Segment2D) -> Line2D: ...
 
     @overload
-    def line(self: Segment3D) -> Line3D:
-        ...
+    def line(self: Segment3D) -> Line3D: ...
 
     def line(self) -> Line:
         return self.p.join(self.q)
@@ -219,43 +217,37 @@ class Segment3D(Segment, Joinable, HasProjection):
 
 
 @overload
-def segment(s: S) -> S:
-    ...
+def segment(s: S) -> S: ...
 
 
 @overload
-def segment(p: Point2D, q: Point2D) -> Segment2D:
-    ...
+def segment(p: Point2D, q: Point2D) -> Segment2D: ...
 
 
 @overload
-def segment(p: Point3D, q: Point3D) -> Segment3D:
-    ...
+def segment(p: Point3D, q: Point3D) -> Segment3D: ...
 
 
 @overload
-def segment(p: Point2D, n: Vector2D) -> Segment2D:
-    ...
+def segment(p: Point2D, n: Vector2D) -> Segment2D: ...
 
 
 @overload
-def segment(p: Point3D, n: Vector3D) -> Segment3D:
-    ...
+def segment(p: Point3D, n: Vector3D) -> Segment3D: ...
 
 
 @overload
-def segment(a: float, b: float, c: float, d: float) -> Segment2D:
-    ...
+def segment(a: float, b: float, c: float, d: float) -> Segment2D: ...
 
 
 @overload
-def segment(a: float, b: float, c: float, d: float, e: float, f: float) -> Segment3D:
-    ...
+def segment(
+    a: float, b: float, c: float, d: float, e: float, f: float
+) -> Segment3D: ...
 
 
 @overload
-def segment(x: np.ndarray) -> Segment:
-    ...
+def segment(x: np.ndarray) -> Segment: ...
 
 
 def segment(*args):
