@@ -1692,17 +1692,43 @@ FixedParameters: 0 0 0
         return point(self.t)
 
     def tostring(self):
-        """Return a string representation of the transform."""
+        """Return a string representation of the transform, which can be easily converted back with kg.frame_transform().
+
+        If the self is:
+
+            FrameTransform([
+                [a00, a01, a02, a03],
+                [a10, a11, a12, a13],
+                [a20, a21, a22, a23],
+                [0, 0, 0, 1]]
+            )
+
+        Then the string representation is:
+
+            "a00 a10 a20 a01 a11 a21 a02 a12 a22 a03 a13 a23"
+
+        """
+
+        formatter = {"float_kind": lambda x: "%.8f" % x}
+        return np.array2string(
+            self.data[:-1, :].T.flatten(), separator=" ", formatter=formatter
+        )[1:-1]
+        
+
+    def for_slicer(self) -> str:
+        """Return a string representation of the transform for Slicer.
+
+        This is a space-separated string of the elements of the matrix's top three rows in row-major order, with 12 elements.
+
+        THIS IS NOT COMPATIBLE WITH THE ITK FORMAT and is only for Slicer. DO NOT PASS THIS TO kg.frame_transform() or it will mess up
+
+        """
         formatter = {"float_kind": lambda x: "%.8f" % x}
         lines = [
             np.array2string(self.data[i], separator=" ", formatter=formatter)[1:-1]
             for i in range(self.data.shape[0])
         ]
         return "\n".join(lines)
-
-    def for_slicer(self) -> str:
-        """Return a string representation of the transform for Slicer."""
-        return self.tostring()
 
     def transform_points(self, points: np.ndarray) -> np.ndarray:
         """Transform a set of points.
