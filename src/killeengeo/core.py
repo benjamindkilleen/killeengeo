@@ -1713,7 +1713,6 @@ FixedParameters: 0 0 0
         return np.array2string(
             self.data[:-1, :].T.flatten(), separator=" ", formatter=formatter
         )[1:-1]
-        
 
     def for_slicer(self) -> str:
         """Return a string representation of the transform for Slicer.
