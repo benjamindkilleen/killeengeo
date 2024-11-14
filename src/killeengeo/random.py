@@ -41,7 +41,7 @@ def spherical_uniform(center=vector(0, 0, 1), d_phi=np.pi, n=None):
 
 @overload
 def clipped_spherical_uniform(
-    center: Point3D,
+    center: Vector3D,
     max_alpha: float,
     max_beta: float,
     max_theta: float,
@@ -51,7 +51,7 @@ def clipped_spherical_uniform(
 
 @overload
 def clipped_spherical_uniform(
-    center: Point3D,
+    center: Vector3D,
     max_alpha: float,
     max_beta: float,
     max_theta: float,
@@ -60,12 +60,12 @@ def clipped_spherical_uniform(
 
 
 def clipped_spherical_uniform(
-    center: Vector3D,
-    max_alpha: float,
-    max_beta: float,
-    max_theta: float,
-    n: int | None = None,
-) -> list[Vector3D]:
+    center,
+    max_alpha,
+    max_beta,
+    max_theta,
+    n,
+):
     """Sample unit vectors on the surface of the sphere within the surface defined by the two angles radians of `center`.
 
     Args:
