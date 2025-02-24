@@ -68,6 +68,8 @@ def clipped_spherical_uniform(
 ):
     """Sample unit vectors on the surface of the sphere within the surface defined by the two angles radians of `center`.
 
+    If the patient is HFS, this assumes the Z axis is anterior, the X axis is left, and the Y axis is inferior.
+
     Args:
         center (Point3D): The center of the sphere.
         max_alpha (float): Upper bound for angulation in the left/right direction in radians.
