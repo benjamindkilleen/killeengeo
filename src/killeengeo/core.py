@@ -33,7 +33,7 @@ from scipy.spatial import cKDTree
 from scipy.spatial.transform import Rotation
 from copy import deepcopy
 import math
-import math
+import base64
 
 from .utils import _array, _to_homogeneous, _from_homogeneous, tuplify
 from .exceptions import MeetError, JoinError
@@ -2212,6 +2212,28 @@ class CameraProjection(Transform):
         return cls(
             intrinsic=CameraIntrinsicTransform.from_config(config["intrinsic"]),
             extrinsic=config["extrinsic"],
+        )
+
+    @classmethod
+    def from_annotation(cls, ann: dict[str, Any]) -> "CameraProjection":
+        """Create a camera projection from a dictionary.
+
+        Args:
+            ann (dict[str, Any]): the configuration.
+
+        Returns:
+            CameraProjection: the camera projection.
+        """
+
+        intrinsic = np.frombuffer(
+            base64.b64decode(ann["intrinsic"]), dtype=np.float16
+        ).astype(np.float32)
+        extrinsic = np.frombuffer(
+            base64.b64decode(ann["extrinsic"]), dtype=np.float16
+        ).astype(np.float32)
+        return cls(
+            intrinsic=CameraIntrinsicTransform(frame_transform(intrinsic)),
+            extrinsic=frame_transform(extrinsic),
         )
 
     @property
