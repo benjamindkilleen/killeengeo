@@ -64,7 +64,7 @@ def clipped_spherical_uniform(
     max_alpha,
     max_beta,
     max_theta,
-    n,
+    n=None,
 ):
     """Sample unit vectors on the surface of the sphere within the surface defined by the two angles radians of `center`.
 
