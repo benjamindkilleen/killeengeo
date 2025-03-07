@@ -3,6 +3,7 @@
 Copyright (c) 2023, Benjamin D. Killeen. MIT License.
 
 """
+
 from .core import (
     HomogeneousObject,
     PointOrVector,
@@ -34,6 +35,10 @@ from .core import (
     slicer_from_unity,
     CameraProjection,
     CameraIntrinsicTransform,
+    HasDirection,
+    HasLocation,
+    HasLocationAndDirection,
+    HasProjection,
 )
 from .hyperplane import HyperPlane, Line, Line2D, Line3D, Plane, line, l, pl, plane
 from .ray import Ray, Ray2D, Ray3D, ray
@@ -95,6 +100,10 @@ __all__ = [
     "CameraProjection",
     "Rotation",
     "spherical_uniform",
+    "HasDirection",
+    "HasLocation",
+    "HasLocationAndDirection",
+    "HasProjection",
 ]
 
 __version__ = "0.0.3"

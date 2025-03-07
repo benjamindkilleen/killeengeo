@@ -256,6 +256,22 @@ class HasDirection(Primitive):
         else:
             return math.acos(cos_theta)
 
+    def acute_angle(self, other: HasDirection, tol: float = 1e-6) -> float:
+        """Get the acute angle between self and other in radians.
+
+        Args:
+            other (Vector): the other vector.
+            tol (float, optional): tolerance for the angle. Defaults to 1e-6.
+
+        Returns:
+            float: the acute angle between self and other in radians.
+        """
+        theta = self.angle(other)
+        if theta > np.pi / 2:
+            return np.pi - theta
+        else:
+            return theta
+
     def rotfrom(self, other: HasDirection) -> FrameTransform:
         """Get the rotation such that `self = self.rotfrom(other) @ other`.
 
@@ -2117,6 +2133,7 @@ class CameraIntrinsicTransform(FrameTransform):
         Based on the convention of origin in top left, with x pointing to the right and y pointing down.
         """
         if self._sensor_width is None:
+            log.info(f"sensor height not set, using optical center: {self.data[1, 2]}")
             return int(np.ceil(2 * self.data[0, 2]))
         else:
             return self._sensor_width
@@ -2134,6 +2151,7 @@ class CameraIntrinsicTransform(FrameTransform):
         Based on the convention of origin in top left, with x pointing to the right and y pointing down.
         """
         if self._sensor_height is None:
+            log.info(f"sensor height not set, using optical center: {self.data[1, 2]}")
             return int(np.ceil(2 * self.data[1, 2]))
         else:
             return self._sensor_height
