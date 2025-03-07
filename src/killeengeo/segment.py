@@ -95,6 +95,15 @@ class Segment(HasLocationAndDirection, Meetable):
         """
         return cls.from_point_direction(p, n)
 
+    def reversed(self) -> Segment:
+        """Get the segment with the points reversed.
+
+        Returns:
+            Segment: The reversed segment.
+
+        """
+        return segment(self.q, self.p)
+
     @property
     def p(self):
         """Get the first point of the segment.

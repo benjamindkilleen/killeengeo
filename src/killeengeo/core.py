@@ -254,7 +254,11 @@ class HasDirection(Primitive):
         if np.isclose(cos_theta, 1):
             return 0
         else:
-            return math.acos(cos_theta)
+            try:
+                return math.acos(cos_theta)
+            except ValueError:
+                log.error(f"cos_theta: {cos_theta}")
+                return 0
 
     def acute_angle(self, other: HasDirection, tol: float = 1e-6) -> float:
         """Get the acute angle between self and other in radians.
