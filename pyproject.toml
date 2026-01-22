@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "killeengeo"
+version = "0.0.5"
+description = "2D and 3D geometry in Python."
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [
+    { name = "Benjamin D. Killeen", email = "killeen@jhu.edu" },
+]
+urls = { "Homepage" = "https://killeengeo.readthedocs.io/en/latest/" }
+dependencies = [
+    "numpy",
+    "scipy",
+    "typing_extensions",
+]
+
+[project.optional-dependencies]
+dev = [
+    "black",
+    "pytest",
+    "pytest-cov",
+    "pre-commit",
+    "black",
+    "flake8",
+    "ipykernel",
+    "ipywidgets",
+    "mkdocs",
+    "mkdocstrings[python]",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
